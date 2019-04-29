@@ -14,6 +14,7 @@ cnopts.hostkeys = None
 from xicam.core import msg
 
 class SFTPDataResourcePlugin(DataResourcePlugin):
+    name = 'SFTP'
     def __init__(self, host=None, user=None, password=None, path=''):
         if not user or not password or not host:
             dialog = CredentialDialog(addmode=False)
@@ -23,6 +24,7 @@ class SFTPDataResourcePlugin(DataResourcePlugin):
             host = dialog.host.text()
 
         scheme = 'sftp'
+        self.name = host
         self.config = {'scheme': scheme, 'host': host, 'path': path, 'user': user, 'password': password}
         super(SFTPDataResourcePlugin, self).__init__(**self.config)
 
