@@ -1,4 +1,4 @@
-from xicam.plugins.DataResourcePlugin import DataResourcePlugin
+from xicam.plugins import DataResourcePlugin
 from urllib import parse
 import pysftp
 import tempfile
