@@ -76,8 +76,8 @@ class SFTPDataResourcePlugin(DataResourcePlugin):
                                    cnopts=cnopts) as connection:
                 self._data = connection.listdir_attr(remotepath=self.config['path'] or '.')
 
-            if self.model:
-                self.dataChanged(self.model.createIndex(0, 0), self.model.createIndex(max(self.rowCount(), oldrows), 0))
+            #if self.model:
+            #    self.dataChanged(self.model.createIndex(0, 0), self.model.createIndex(max(self.rowCount(), oldrows), 0))
         except FileNotFoundError:
             pass
 
