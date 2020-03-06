@@ -3,6 +3,7 @@ from urllib import parse
 import pysftp
 import tempfile
 import os
+from pathlib import Path
 import stat
 from functools import partial
 from xicam.core import threads
@@ -82,15 +83,21 @@ class SFTPDataResourcePlugin(DataResourcePlugin):
 
     def pull(self, index):
         if index.isValid():
-            tmpdir = tempfile.mkdtemp()
-            filename = self._data[index.row()].filename
+            tmpdir = Path(tempfile.mkdtemp())
+            
+            filename = Path(self._data[index.row()].filename)
+            
+            rPath = Path(self.config['path']) / Path(filename)
+            tmpPath = tmpdir / filename
+            
             with pysftp.Connection(self.config['host'],
                                    username=self.config['user'],
                                    password=self.config['password'],
                                    cnopts=cnopts) as connection:
-                connection.get(remotepath=os.path.join(self.config['path'], filename),
-                               localpath=os.path.join(tmpdir, filename), callback=self._showProgress)
-            return os.path.join(tmpdir, filename)
+                connection.get(remotepath = rPath.as_posix(),
+                               localpath = tmpPath.as_posix(), callback=self._showProgress)
+            
+            return str(tmpPath)
 
     def _showProgress(self, progress: int, maxprogress: int):
         threads.invoke_in_main_thread(msg.showProgress, progress, 0, maxprogress)
